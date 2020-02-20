@@ -144,14 +144,14 @@ int fx3_usbboot_download(const char *filename)
 	int r, index;
 
 	fwBuf = (unsigned char *)calloc (1, MAX_FWIMG_SIZE);
-	if ( fwBuf == 0 ) {
+	if ( fwBuf == nullptr ) {
 		printf("Failed to allocate buffer to store firmware binary\n");
 		sb->showMessage("Error: Failed to get memory for download\n", 5000);
 		return -1;
 	}
 
 	// Read the firmware image into the local RAM buffer.
-	r = read_firmware_image(filename, fwBuf, NULL);
+	r = read_firmware_image(filename, fwBuf, nullptr);
 	if ( r != 0 ) {
 		printf("Failed to read firmware file %s\n", filename);
 		sb->showMessage("Error: Failed to read firmware binary\n", 5000);
@@ -184,7 +184,7 @@ int fx3_usbboot_download(const char *filename)
 				return -4;
 			}
 
-			r = libusb_control_transfer(h, 0x40, 0xA0, GET_LSW(address), GET_MSW(address), NULL,
+			r = libusb_control_transfer(h, 0x40, 0xA0, GET_LSW(address), GET_MSW(address), nullptr,
 					0, VENDORCMD_TIMEOUT);
 			if ( r != 0 )
 				printf("Ignored error in control transfer: %d\n", r);
@@ -230,7 +230,7 @@ static int get_fx3_prog_handle(void)
 	printf("Trying to download flash programmer to RAM\n");
 
 	tmp = getenv("CYUSB_ROOT");
-	if (tmp != NULL) {
+	if (tmp != nullptr) {
 		i = strlen(tmp);
 		progfile_p = (char *)malloc(i + 32);
 		strcpy(progfile_p, tmp);
@@ -451,7 +451,7 @@ static int spi_erase_sector(unsigned short nsector)
 	int           timeout = 10;
 	int r;
 
-	r = libusb_control_transfer(h, 0x40, 0xC4, 1, nsector, NULL, 0, VENDORCMD_TIMEOUT);
+	r = libusb_control_transfer(h, 0x40, 0xC4, 1, nsector, nullptr, 0, VENDORCMD_TIMEOUT);
 	if (r != 0) {
 		printf("SPI sector erase failed\n");
 		return -1;
@@ -492,13 +492,13 @@ int fx3_spiboot_download(const char *filename)
 
 	// Allocate memory for holding the firmware binary.
 	fwBuf = (unsigned char *)calloc (1, MAX_FWIMG_SIZE);
-	if ( fwBuf == 0 ) {
+	if ( fwBuf == nullptr ) {
 		printf("Failed to allocate buffer to store firmware binary\n");
 		sb->showMessage("Error: Failed to get memory for download\n", 5000);
 		return -2;
 	}
 
-	if ( read_firmware_image(filename, fwBuf, NULL) ) {
+	if ( read_firmware_image(filename, fwBuf, nullptr) ) {
 		printf("File %s does not contain valid FX3 firmware image\n", filename);
 		sb->showMessage("Error: Failed to find valid FX3 firmware image", 5000);
 		free(fwBuf);

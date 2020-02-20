@@ -13,7 +13,7 @@ class ControlCenter : public QWidget, public Ui::ControlCenter
 	Q_OBJECT
 
 public:
-	ControlCenter(QWidget *parent = 0);
+	ControlCenter(QWidget *parent = nullptr);
 	static void unixhandler_sigusr1(int unused);
 	QSocketNotifier *sn_sigusr1;
 

@@ -321,12 +321,12 @@ get_fw_format (
 	unsigned char num_bytes;
 	unsigned int  len;
 
-	if (fw_fil_p != 0) {
+	if (fw_fil_p != nullptr) {
 		fseek (fw_fil_p, 0, SEEK_SET);
 
 		/* Check for valid HEX file first. Each line should begin with ':' and
 		 * have enough data to cover the byte count per line. */
-		while (fgets ((char *)hexdata, MAX_LINE_LENGTH, fw_fil_p) != NULL) {
+		while (fgets ((char *)hexdata, MAX_LINE_LENGTH, fw_fil_p) != nullptr) {
 
 			if (hexdata[0] != ':')
 				fmt = FW_FORMAT_BIN;
@@ -341,7 +341,7 @@ get_fw_format (
 
 		if (fmt != FW_FORMAT_HEX) {
 			fseek (fw_fil_p, 0, SEEK_SET);
-			if (fgets ((char *)hexdata, MAX_LINE_LENGTH, fw_fil_p) == NULL) {
+			if (fgets ((char *)hexdata, MAX_LINE_LENGTH, fw_fil_p) == nullptr) {
 				fmt = FW_FORMAT_INVALID;
 			} else {
 				switch (hexdata[0]) {
@@ -376,7 +376,7 @@ read_fx2_firmware (
 		unsigned char *fw_buf,
 		unsigned int  *max_addr)
 {
-	FILE         *in_file = NULL;
+	FILE         *in_file = nullptr;
 	fx2_fw_fmt    fmt;
 	int           ret;
 	struct stat   filbuf;
@@ -384,7 +384,7 @@ read_fx2_firmware (
 	unsigned int  i, address, length;
 
 
-	if ((filename == NULL) || (fw_buf == NULL) || (max_addr == NULL)) {
+	if ((filename == nullptr) || (fw_buf == nullptr) || (max_addr == nullptr)) {
 		fprintf (stderr, "Invalid parameter\n");
 		return FW_FORMAT_INVALID;
 	}
@@ -396,7 +396,7 @@ read_fx2_firmware (
 	}
 
 	in_file = fopen (filename, "rb");
-	if (in_file == NULL) {
+	if (in_file == nullptr) {
 		fprintf (stderr, "Failed to open file %s\n", filename);
 		return FW_FORMAT_INVALID;
 	}
@@ -413,7 +413,7 @@ read_fx2_firmware (
 				fmt    = FW_FORMAT_INVALID;
 				length = 0;
 
-				while (fgets ((char *)scratch, MAX_LINE_LENGTH, in_file) != NULL) {
+				while (fgets ((char *)scratch, MAX_LINE_LENGTH, in_file) != nullptr) {
 					/* If this is the end of file record, stop reading. */
 					if ((scratch[7] == '0') && (scratch[8] == '1')) {
 						fmt = FW_FORMAT_BIN;
@@ -511,7 +511,7 @@ read_fx2_firmware (
 	return (fmt);
 }
 
-/* Function to load the Vend_Ax firmware into the FX3 RAM. */
+/* Function to load the Vend_Ax firmware into the FX2 RAM. */
 static int fx2_load_vendax(void)
 {
 	int r, j;

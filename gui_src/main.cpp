@@ -28,11 +28,11 @@
 #include "../include/controlcenter.h"
 #include "../include/cyusb.h"
 
-ControlCenter *mainwin = NULL;
-QProgressBar  *mbar = NULL;
-QStatusBar *sb = NULL;
-libusb_device_handle  *h = NULL;
-libusb_device  *dev = NULL;
+ControlCenter *mainwin = nullptr;
+QProgressBar  *mbar = nullptr;
+QStatusBar *sb = nullptr;
+libusb_device_handle  *h = nullptr;
+libusb_device  *dev = nullptr;
 int num_devices_detected;
 int current_device_index = -1;
 
@@ -61,8 +61,8 @@ static int summ_count = 0;
 static unsigned int cum_data_in;
 static unsigned int cum_data_out;
 static int data_count;
-static struct libusb_transfer *transfer = NULL;
-static unsigned char *isoc_databuf = NULL;
+static struct libusb_transfer *transfer = nullptr;
+static unsigned char *isoc_databuf = nullptr;
 static int totalout, totalin, pkts_success, pkts_failure;
 
 static int fd_outfile, fd_infile;
@@ -120,7 +120,7 @@ static void update_devlist()
 {
 	int i, r, num_interfaces, index = 0;
 	char tbuf[60];
-	struct libusb_config_descriptor *config_desc = NULL;
+	struct libusb_config_descriptor *config_desc = nullptr;
 	struct libusb_device_descriptor desc;
 
 	mainwin->listWidget->clear();
@@ -471,7 +471,7 @@ void ControlCenter::on_pb_setIFace_clicked()
 	char tval[3];
 	int N, M;
 
-	struct libusb_config_descriptor *config_desc = NULL;
+	struct libusb_config_descriptor *config_desc = nullptr;
 
 	r = libusb_get_active_config_descriptor(dev, &config_desc);
 	if ( r ) libusb_error(r, "Error in 'get_active_config_descriptor' ");
@@ -558,7 +558,7 @@ void get_config_details()
 	int i, j, k;
 	char tbuf[60];
 	char tval[3];
-	struct libusb_config_descriptor *desc = NULL;
+	struct libusb_config_descriptor *desc = nullptr;
 
 	h = cyusb_gethandle(current_device_index);
 	dev = libusb_get_device(h);
@@ -626,9 +626,9 @@ void get_config_details()
 				sprintf(tbuf,"\t\t<ENDPOINT>");
 				mainwin->lw_desc->addItem(QString(tbuf));
 				const struct libusb_endpoint_descriptor *ep = ifd[j].endpoint;
-				struct libusb_ss_endpoint_companion_descriptor *compd = NULL;
+				struct libusb_ss_endpoint_companion_descriptor *compd = nullptr;
 
-				libusb_get_ss_endpoint_companion_descriptor (NULL, ep, &compd);
+				libusb_get_ss_endpoint_companion_descriptor (nullptr, ep, &compd);
 
 				sprintf(tbuf,"\t\tbLength             = %0d",  ep[k].bLength);
 				mainwin->lw_desc->addItem(QString(tbuf));
@@ -646,7 +646,7 @@ void get_config_details()
 				summ[summ_count].maxps    = ep[k].wMaxPacketSize & 0x7ff;  /* ignoring bits 11,12 */
 				summ[summ_count].interval = ep[k].bInterval;
 
-				if (compd != NULL) {
+				if (compd != nullptr) {
 					// USB 3.0. Multiple max packet size by burst size.
 					if (summ[summ_count].eptype == LIBUSB_TRANSFER_TYPE_ISOCHRONOUS)
 						summ[summ_count].reqsize = (summ[summ_count].maxps * (compd->bMaxBurst + 1) *
@@ -696,7 +696,7 @@ void get_device_details()
 	char tbuf[60];
 	char tval[3];
 	struct libusb_device_descriptor desc;
-	struct libusb_config_descriptor *config_desc = NULL;
+	struct libusb_config_descriptor *config_desc = nullptr;
 
 	h = cyusb_gethandle(current_device_index);
 	if ( !h ) {
@@ -1222,11 +1222,11 @@ void ControlCenter::on_pb_execvc_clicked()
 		return ;
 	}
 
-	unsigned char bmReqType = strtoul(qPrintable(mainwin->le3_bm->text()), NULL, 16);
-	unsigned char bRequest  = strtoul(qPrintable(mainwin->le3_br->text()), NULL, 16);
-	unsigned short wValue   = strtoul(qPrintable(mainwin->le3_wval->text()), NULL, 16);
-	unsigned short wIndex   = strtoul(qPrintable(mainwin->le3_wind->text()), NULL, 16);
-	unsigned short wLength  = strtoul(qPrintable(mainwin->le3_wlen->text()),NULL, 10);
+	unsigned char bmReqType = strtoul(qPrintable(mainwin->le3_bm->text()), nullptr, 16);
+	unsigned char bRequest  = strtoul(qPrintable(mainwin->le3_br->text()), nullptr, 16);
+	unsigned short wValue   = strtoul(qPrintable(mainwin->le3_wval->text()), nullptr, 16);
+	unsigned short wIndex   = strtoul(qPrintable(mainwin->le3_wind->text()), nullptr, 16);
+	unsigned short wLength  = strtoul(qPrintable(mainwin->le3_wlen->text()),nullptr, 10);
 	char data[4096];
 	char msg[64];
 
@@ -1996,7 +1996,7 @@ void ControlCenter::on_pb7_rcv_clicked()
 		return;
 	}
 
-	libusb_fill_iso_transfer(transfer, h, ep_in, isoc_databuf, bufsize_in, numpkts, in_callback, NULL, 10000 );
+	libusb_fill_iso_transfer(transfer, h, ep_in, isoc_databuf, bufsize_in, numpkts, in_callback, nullptr, 10000 );
 
 	libusb_set_iso_packet_lengths(transfer, pktsize_in);
 	transfer->flags = LIBUSB_TRANSFER_FREE_BUFFER | LIBUSB_TRANSFER_FREE_TRANSFER;
@@ -2010,7 +2010,7 @@ void ControlCenter::on_pb7_rcv_clicked()
 	tv.tv_usec = 50;
 
 	for ( int i = 0; i < 100; ++i ) {
-		libusb_handle_events_timeout(NULL,&tv);
+		libusb_handle_events_timeout(nullptr,&tv);
 	}
 
 	if ( r ) {
@@ -2057,7 +2057,7 @@ void ControlCenter::on_pb7_send_clicked()
 		return;
 	}
 
-	libusb_fill_iso_transfer(transfer, h, ep_out, isoc_databuf, bufsize_out, numpkts, out_callback, NULL, 10000 );
+	libusb_fill_iso_transfer(transfer, h, ep_out, isoc_databuf, bufsize_out, numpkts, out_callback, nullptr, 10000 );
 
 	libusb_set_iso_packet_lengths(transfer, pktsize_out);
 	transfer->flags = LIBUSB_TRANSFER_FREE_BUFFER | LIBUSB_TRANSFER_FREE_TRANSFER;
@@ -2072,7 +2072,7 @@ void ControlCenter::on_pb7_send_clicked()
 	tv.tv_usec = 50;
 
 	for ( int i = 0; i < 100; ++i ) {
-		libusb_handle_events_timeout(NULL,&tv);
+		libusb_handle_events_timeout(nullptr,&tv);
 	}
 
 	if ( r ) {
@@ -2158,7 +2158,7 @@ int main(int argc, char **argv)
 	signal(SIGUSR1, setup_handler);
 
 	mainwin = new ControlCenter;
-	QMainWindow *mw = new QMainWindow(0);
+	QMainWindow *mw = new QMainWindow(nullptr);
 	mw->setCentralWidget(mainwin);
 	QIcon *qic = new QIcon("cypress.png");
 	app.setWindowIcon(*qic);
