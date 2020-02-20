@@ -8,3 +8,11 @@ clean:
 help:
 	@echo	'make		would compile and create the library and create a link'
 	@echo	'make clean	would remove the library and the soft link to the library (soname)'
+	@echo	'make install	would create and install everything'
+	@echo	'make deb	would build a debian package, can be called as user'
+
+install:
+	./install.sh
+
+deb:
+	fakeroot checkinstall --default --install=no --backup=no --deldoc=yes

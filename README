@@ -8,7 +8,7 @@ Pre-requisites:
     library.
  2. Native gcc/g++ tool-chain and the GNU make utility are required for
     compiling the library and application.
- 2. qt4 is required for building the cyusb_linux GUI application.
+ 2. qt5 is required for building the cyusb_linux GUI application.
  3. The pidof command is used by the cyusb_linux application to handle
     hot-plug of USB devices.
 
@@ -34,6 +34,7 @@ Installation Steps:
 
     e.g.: root@desktop:/home/user/cyusb_linux_1.0.5 $ ./install.sh
 
- 4. The GUI application can now be launched using the 'cyusb_linux' command.
+ 4. 'make deb' does all the steps above and creates a quick'n'dirty debian package.
+    This step can be done as user. You must be root to install the *.deb package.
 
-
+ 5. The GUI application can now be launched using the 'cyusb_linux' command.

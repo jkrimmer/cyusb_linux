@@ -73,7 +73,7 @@ static char le3_out_data[4096] = {0};
 // Buffer used to assemble bulk/iso data to be transferred
 static char le6_out_data[4096] = {0};
 
-static void libusb_error(int errno, const char *detailedText)
+static void libusb_error(int error, const char *detailedText)
 {
 	char msg[30];
 	char tbuf[60];
@@ -81,35 +81,35 @@ static void libusb_error(int errno, const char *detailedText)
 	memset(msg,'\0',30);
 	memset(tbuf,'\0',60);
 	QMessageBox mb;
-	if ( errno == LIBUSB_ERROR_IO )
+	if ( error == LIBUSB_ERROR_IO )
 		strcpy(msg, "LIBUSB_ERROR_IO");
-	else if ( errno == LIBUSB_ERROR_INVALID_PARAM )
+	else if ( error == LIBUSB_ERROR_INVALID_PARAM )
 		strcpy(msg, "LIBUSB_ERROR_INVALID_PARAM" );
-	else if ( errno == LIBUSB_ERROR_ACCESS )
+	else if ( error == LIBUSB_ERROR_ACCESS )
 		strcpy(msg, "LIBUSB_ERROR_ACCESS");
-	else if ( errno == LIBUSB_ERROR_NO_DEVICE )
+	else if ( error == LIBUSB_ERROR_NO_DEVICE )
 		strcpy(msg, "LIBUSB_ERROR_NO_DEVICE");
-	else if ( errno == LIBUSB_ERROR_NOT_FOUND )
+	else if ( error == LIBUSB_ERROR_NOT_FOUND )
 		strcpy(msg, "LIBUSB_ERROR_NOT_FOUND");
-	else if ( errno == LIBUSB_ERROR_BUSY )
+	else if ( error == LIBUSB_ERROR_BUSY )
 		strcpy(msg, "LIBUSB_ERROR_BUSY");
-	else if ( errno == LIBUSB_ERROR_TIMEOUT )
+	else if ( error == LIBUSB_ERROR_TIMEOUT )
 		strcpy(msg, "LIBUSB_ERROR_TIMEOUT");
-	else if ( errno == LIBUSB_ERROR_OVERFLOW )
+	else if ( error == LIBUSB_ERROR_OVERFLOW )
 		strcpy(msg, "LIBUSB_ERROR_OVERFLOW");
-	else if ( errno == LIBUSB_ERROR_PIPE )
+	else if ( error == LIBUSB_ERROR_PIPE )
 		strcpy(msg, "LIBUSB_ERROR_PIPE");
-	else if ( errno == LIBUSB_ERROR_INTERRUPTED )
+	else if ( error == LIBUSB_ERROR_INTERRUPTED )
 		strcpy(msg, "LIBUSB_ERROR_INTERRUPTED");
-	else if ( errno == LIBUSB_ERROR_NO_MEM )
+	else if ( error == LIBUSB_ERROR_NO_MEM )
 		strcpy(msg, "LIBUSB_ERROR_NO_MEM");
-	else if ( errno == LIBUSB_ERROR_NOT_SUPPORTED )
+	else if ( error == LIBUSB_ERROR_NOT_SUPPORTED )
 		strcpy(msg, "LIBUSB_ERROR_NOT_SUPPORTED");
-	else if ( errno == LIBUSB_ERROR_OTHER )
+	else if ( error == LIBUSB_ERROR_OTHER )
 		strcpy(msg, "LIBUSB_ERROR_OTHER");
 	else strcpy(msg, "LIBUSB_ERROR_UNDOCUMENTED");
 
-	sprintf(tbuf,"LIBUSB_ERROR NO : %d, %s",errno,msg);
+	sprintf(tbuf,"LIBUSB_ERROR NO : %d, %s",error,msg);
 	mb.setText(tbuf);
 	mb.setDetailedText(detailedText);
 	mb.exec();
