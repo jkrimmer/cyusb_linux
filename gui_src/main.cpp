@@ -557,7 +557,7 @@ void get_config_details()
 	int r;
 	int i, j, k;
 	char tbuf[60];
-	char tval[3];
+	char tval[4];
 	struct libusb_config_descriptor *desc = nullptr;
 
 	h = cyusb_gethandle(current_device_index);
@@ -694,7 +694,7 @@ void get_device_details()
 {
 	int r;
 	char tbuf[60];
-	char tval[3];
+	char tval[4];
 	struct libusb_device_descriptor desc;
 	struct libusb_config_descriptor *config_desc = nullptr;
 

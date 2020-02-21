@@ -284,7 +284,7 @@ static void dump_buffer(unsigned char num_bytes, short address, unsigned char *d
 {
 	int i;
 	char ttbuf[10];
-	char finalbuf[256];
+	char finalbuf[400];
 	char tbuf[256];
 
 	tbuf[0]  = '\0';
