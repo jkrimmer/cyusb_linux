@@ -538,13 +538,13 @@ static void update_summary(void)
 				}
 				else { sprintf(tbuf,"%-6s %-6s %-6s %-6s %-6s %-6s %-6s",
 						ifnum,altnum,epnum,iodirn,iotype,maxps,interval);
-				mainwin->lw_summ->addItem("");
+				// mainwin->lw_summ->addItem("");
 				mainwin->lw_summ->addItem(tbuf);
 				}
 			}
 			else { sprintf(tbuf,"%-6s %-6s %-6s %-6s %-6s %-6s %-6s",
 					ifnum,altnum,epnum,iodirn,iotype,maxps,interval);
-			mainwin->lw_summ->addItem("");
+			// mainwin->lw_summ->addItem("");
 			mainwin->lw_summ->addItem(tbuf);
 			}
 		}

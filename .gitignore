@@ -96,4 +96,5 @@ bin/*
 install
 *.deb
 description-pak
+doc-pak
 *~
