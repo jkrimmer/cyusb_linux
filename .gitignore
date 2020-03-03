@@ -95,4 +95,5 @@ compile_commands.json
 bin/*
 install
 *.deb
+description-pak
 *~

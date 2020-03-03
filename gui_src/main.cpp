@@ -557,7 +557,7 @@ void get_config_details()
 	int r;
 	int i, j, k;
 	char tbuf[60];
-	char tval[4];
+	char tval[5];
 	struct libusb_config_descriptor *desc = nullptr;
 
 	h = cyusb_gethandle(current_device_index);
@@ -694,7 +694,7 @@ void get_device_details()
 {
 	int r;
 	char tbuf[60];
-	char tval[4];
+	char tval[5];
 	struct libusb_device_descriptor desc;
 	struct libusb_config_descriptor *config_desc = nullptr;
 
@@ -726,7 +726,7 @@ void get_device_details()
 	mainwin->lw_desc->addItem(QString(tbuf));
 	sprintf(tbuf,"bDescriptorType     = %d",   desc.bDescriptorType);
 	mainwin->lw_desc->addItem(QString(tbuf));
-	sprintf(tbuf,"bcdUSB              = %d",   desc.bcdUSB);
+	sprintf(tbuf,"bcdUSB              = %04x", desc.bcdUSB);
 	mainwin->lw_desc->addItem(QString(tbuf));
 	sprintf(tbuf,"bDeviceClass        = %d",   desc.bDeviceClass);
 	mainwin->lw_desc->addItem(QString(tbuf));
@@ -740,7 +740,7 @@ void get_device_details()
 	mainwin->lw_desc->addItem(QString(tbuf));
 	sprintf(tbuf,"idProduct           = %04x", desc.idProduct);
 	mainwin->lw_desc->addItem(QString(tbuf));
-	sprintf(tbuf,"bcdDevice           = %d",   desc.bcdDevice);
+	sprintf(tbuf,"bcdDevice           = %04x", desc.bcdDevice);
 	mainwin->lw_desc->addItem(QString(tbuf));
 	sprintf(tbuf,"iManufacturer       = %d",   desc.iManufacturer);
 	mainwin->lw_desc->addItem(QString(tbuf));

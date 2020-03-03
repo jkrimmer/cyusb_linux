@@ -285,7 +285,7 @@ static void dump_buffer(unsigned char num_bytes, short address, unsigned char *d
 	int i;
 	char ttbuf[10];
 	char finalbuf[400];
-	char tbuf[256];
+	char tbuf[300];
 
 	tbuf[0]  = '\0';
 	for ( i = 0; i < num_bytes; ++i ) {

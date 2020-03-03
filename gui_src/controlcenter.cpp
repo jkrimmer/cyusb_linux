@@ -20,7 +20,7 @@ ControlCenter::ControlCenter(QWidget *parent) : QWidget(parent)
 
 	QStringList list;
 	list.clear();
-	list << "1" << "2" << "4" << "8" << "16" << "32" << "64" << "128";
+	list << "1" << "2" << "4" << "8" << "16" << "32" << "64" << "128" << "256" << "512"; // max 512
 	cb7_numpkts->addItems(list);
 	rb7_enable->setChecked(false); /* disabled by default for maximum performance */
 	rb7_disable->setChecked(true); /* disabled by default for maximum performance */
