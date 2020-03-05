@@ -1,7 +1,8 @@
-#!/bin/bash
-pid=`pidof cyusb_linux`
+#!/bin/sh
+
+pid=`pidof cyusb`
 
 if [ "$pid" ]; then
-    kill -s SIGUSR1 $pid
+    /usr/bin/kill -s SIGUSR1 $pid
 fi
 

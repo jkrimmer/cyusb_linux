@@ -2111,7 +2111,7 @@ void ControlCenter::on_rb7_disable_clicked()
 static int multiple_instances()
 {
 
-	if ( server.listen("/dev/shm/cyusb_linux") ) {
+	if ( server.listen("/dev/shm/cyusb") ) {
 		return 0;   /* Only one instance of this application is running  */
 	}
 
@@ -2141,7 +2141,7 @@ int main(int argc, char **argv)
 	QApplication app(argc, argv);
 
 	if ( multiple_instances() ) {
-		printf("Application already running ? If NOT, manually delete socket file /dev/shm/cyusb_linux and restart\n");
+		printf("Application already running ? If NOT, manually delete socket file /dev/shm/cyusb and restart\n");
 		return -1;
 	}
 
