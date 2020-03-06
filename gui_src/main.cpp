@@ -2136,16 +2136,15 @@ void ControlCenter::about()
 
 int main(int argc, char **argv)
 {
-	int r;
-
 	QApplication app(argc, argv);
-
+//    QApplication::setStyle( "Fusion" );
+    app.setStyle("Fusion");
 	if ( multiple_instances() ) {
 		printf("Application already running ? If NOT, manually delete socket file /dev/shm/cyusb and restart\n");
 		return -1;
 	}
 
-	r = cyusb_open();
+	int r = cyusb_open();
 	if ( r < 0 ) {
 		printf("Error opening library\n");
 		return -1;
@@ -2160,7 +2159,7 @@ int main(int argc, char **argv)
 	mainwin = new ControlCenter;
 	QMainWindow *mw = new QMainWindow(nullptr);
 	mw->setCentralWidget(mainwin);
-	QIcon *qic = new QIcon("cypress.png");
+	QIcon *qic = new QIcon(":/cypress_60x60.png");
 	app.setWindowIcon(*qic);
 	set_tool_tips();
 	mw->setFixedSize(880, 660);
