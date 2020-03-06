@@ -98,3 +98,6 @@ install
 description-pak
 doc-pak
 *~
+*.orig
+*.new
+*.diff

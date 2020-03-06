@@ -12,10 +12,7 @@ all: lib gui
 
 .PHONY: lib
 lib:
-	g++ -fPIC -o lib/libcyusb.o -c lib/libcyusb.cpp
-	g++ -shared -Wl,-soname,libcyusb.so -o lib/libcyusb.so.1 lib/libcyusb.o -l usb-1.0 -l rt
-	cd lib; ln -sf libcyusb.so.1 libcyusb.so
-	rm -f lib/libcyusb.o
+	cd lib && make
 
 .PHONY: gui
 gui:
@@ -30,9 +27,9 @@ clean:
 .PHONY: install
 install:
 	@if [ `whoami` != 'root' ]; then echo "You have to be root to run this script"; exit 1; fi
-	rm -f /usr/lib/libcyusb.so* /usr/local/lib/libcyusb.so*
+	-rm -f /usr/lib/libcyusb.so* /usr/local/lib/libcyusb.so*
 	install -m644 lib/libcyusb.so.1 /usr/local/lib
-	cd /usr/local/lib; ln -s libcyusb.so.1 libcyusb.so
+	cd /usr/local/lib; ln -sf libcyusb.so.1 libcyusb.so
 	install configs/cy_renumerate.sh /usr/local/bin
 	install bin/cyusb /usr/local/bin/
 	install -m644 configs/cyusb.conf /etc/

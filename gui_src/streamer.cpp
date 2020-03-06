@@ -140,7 +140,7 @@ xfer_callback (
 	transfer_index++;
 	if (transfer_index == queuedepth) {
 
-		gettimeofday (&end_ts, NULL);
+		gettimeofday (&end_ts, nullptr);
 		elapsed_time = ((end_ts.tv_sec - start_ts.tv_sec) * 1000000 +
 			(end_ts.tv_usec - start_ts.tv_usec));
 
@@ -191,23 +191,23 @@ free_transfer_buffers (
 		struct libusb_transfer **transfers)
 {
 	// Free up any allocated transfer structures
-	if (transfers != NULL) {
+	if (transfers != nullptr) {
 		for (unsigned int i = 0; i < queuedepth; i++) {
-			if (transfers[i] != NULL) {
+			if (transfers[i] != nullptr) {
 				libusb_free_transfer (transfers[i]);
 			}
-			transfers[i] = NULL;
+			transfers[i] = nullptr;
 		}
 		free (transfers);
 	}
 
 	// Free up any allocated data buffers
-	if (databuffers != NULL) {
+	if (databuffers != nullptr) {
 		for (unsigned int i = 0; i < queuedepth; i++) {
-			if (databuffers[i] != NULL) {
+			if (databuffers[i] != nullptr) {
 				free (databuffers[i]);
 			}
-			databuffers[i] = NULL;
+			databuffers[i] = nullptr;
 		}
 		free (databuffers);
 	}
@@ -221,14 +221,14 @@ streamer_thread_func (
 		void *arg)
 {
 	libusb_device_handle *dev_handle = (libusb_device_handle *)arg;
-	struct libusb_transfer **transfers = NULL;		// List of transfer structures.
-	unsigned char **databuffers = NULL;			// List of data buffers.
+	struct libusb_transfer **transfers = nullptr;		// List of transfer structures.
+	unsigned char **databuffers = nullptr;			// List of data buffers.
 	int  rStatus;
 
 	// Check for validity of the device handle
-	if (dev_handle == NULL) {
+	if (dev_handle == nullptr) {
 		printf ("Failed to get CyUSB device handle\n");
-		pthread_exit (NULL);
+		pthread_exit (nullptr);
 	}
 
 	// The endpoint is already found and its properties are known.
@@ -246,7 +246,7 @@ streamer_thread_func (
 	databuffers = (unsigned char **)calloc (queuedepth, sizeof (unsigned char *));
 	transfers   = (struct libusb_transfer **)calloc (queuedepth, sizeof (struct libusb_transfer *));
 
-	if ((databuffers != NULL) && (transfers != NULL)) {
+	if ((databuffers != nullptr) && (transfers != nullptr)) {
 
 		for (unsigned int i = 0; i < queuedepth; i++) {
 
@@ -254,7 +254,7 @@ streamer_thread_func (
 			transfers[i]   = libusb_alloc_transfer (
 					(eptype == LIBUSB_TRANSFER_TYPE_ISOCHRONOUS) ? reqsize : 0);
 
-			if ((databuffers[i] == NULL) || (transfers[i] == NULL)) {
+			if ((databuffers[i] == nullptr) || (transfers[i] == nullptr)) {
 				allocfail = true;
 				break;
 			}
@@ -270,18 +270,18 @@ streamer_thread_func (
 	if (allocfail) {
 		printf ("Failed to allocate buffers and transfer structures\n");
 		free_transfer_buffers (databuffers, transfers);
-		pthread_exit (NULL);
+		pthread_exit (nullptr);
 	}
 
 	// Take the transfer start timestamp
-	gettimeofday (&start_ts, NULL);
+	gettimeofday (&start_ts, nullptr);
 
 	// Launch all the transfers till queue depth is complete
 	for (unsigned int i = 0; i < queuedepth; i++) {
 		switch (eptype) {
 			case LIBUSB_TRANSFER_TYPE_BULK:
 				libusb_fill_bulk_transfer (transfers[i], dev_handle, endpoint,
-						databuffers[i], reqsize * pktsize, xfer_callback, NULL, 5000);
+						databuffers[i], reqsize * pktsize, xfer_callback, nullptr, 5000);
 				rStatus = libusb_submit_transfer (transfers[i]);
 				if (rStatus == 0)
 					rqts_in_flight++;
@@ -289,7 +289,7 @@ streamer_thread_func (
 
 			case LIBUSB_TRANSFER_TYPE_INTERRUPT:
 				libusb_fill_interrupt_transfer (transfers[i], dev_handle, endpoint,
-						databuffers[i], reqsize * pktsize, xfer_callback, NULL, 5000);
+						databuffers[i], reqsize * pktsize, xfer_callback, nullptr, 5000);
 				rStatus = libusb_submit_transfer (transfers[i]);
 				if (rStatus == 0)
 					rqts_in_flight++;
@@ -297,7 +297,7 @@ streamer_thread_func (
 
 			case LIBUSB_TRANSFER_TYPE_ISOCHRONOUS:
 				libusb_fill_iso_transfer (transfers[i], dev_handle, endpoint, databuffers[i],
-						reqsize * pktsize, reqsize, xfer_callback, NULL, 5000);
+						reqsize * pktsize, reqsize, xfer_callback, nullptr, 5000);
 				libusb_set_iso_packet_lengths (transfers[i], pktsize);
 				rStatus = libusb_submit_transfer (transfers[i]);
 				if (rStatus == 0)
@@ -312,7 +312,7 @@ streamer_thread_func (
 	printf ("Queued %d requests\n", rqts_in_flight);
 
 	struct timeval t1, t2, tout;
-	gettimeofday (&t1, NULL);
+	gettimeofday (&t1, nullptr);
 
 	// Use a 1 second timeout for the libusb_handle_events_timeout call
 	tout.tv_sec  = 1;
@@ -320,10 +320,10 @@ streamer_thread_func (
 
 	// Keep handling events until transfer stop is requested.
 	do {
-		libusb_handle_events_timeout (NULL, &tout);
+		libusb_handle_events_timeout (nullptr, &tout);
 
 		// Refresh the performance statistics about once in 0.5 seconds.
-		gettimeofday (&t2, NULL);
+		gettimeofday (&t2, nullptr);
 		if (t2.tv_sec > t1.tv_sec) {
 			streamer_update_results ();
 			t1 = t2;
@@ -334,7 +334,7 @@ streamer_thread_func (
 	printf ("Stopping streamer app\n");
 	while (rqts_in_flight != 0) {
 		printf ("%d requests are pending\n", rqts_in_flight);
-		libusb_handle_events_timeout (NULL, &tout);
+		libusb_handle_events_timeout (nullptr, &tout);
 		sleep (1);
 	}
 
@@ -342,7 +342,7 @@ streamer_thread_func (
 	app_running = false;
 
 	printf ("Streamer test completed\n\n");
-	pthread_exit (NULL);
+	pthread_exit (nullptr);
 }
 
 // Function: streamer_start_xfer
@@ -366,7 +366,7 @@ streamer_start_xfer (
 
 	// Mark application running
 	app_running    = true;
-	if (pthread_create (&strm_thread, NULL, streamer_thread_func, (void *)h) != 0) {
+	if (pthread_create (&strm_thread, nullptr, streamer_thread_func, (void *)h) != 0) {
 		app_running = false;
 		return -ENOMEM;
 	}
