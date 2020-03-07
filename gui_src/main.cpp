@@ -918,7 +918,7 @@ void ControlCenter::on_pb1_selfile_clicked()
 		return ;
 	}
 	if ( mainwin->rb1_ram->isChecked() )
-		filename = QFileDialog::getOpenFileName(this, "Select file to download...", ".", "Hex file (*.hex);;IIC file (*.iic);;BIN file (*.bin)");
+		filename = QFileDialog::getOpenFileName(this, "Select file to download...", ".", "Hex file (*.hex *.ihx);;IIC file (*.iic);;BIN file (*.bin)");
 	else
 	       	filename = QFileDialog::getOpenFileName(this, "Select file to download...", ".", "IIC files (*.iic)");
 	mainwin->label1_selfile->setText(filename);
@@ -1109,7 +1109,7 @@ void ControlCenter::on_pb3_selfile_clicked()
 		mb.exec();
 		return ;
 	}
-	filename = QFileDialog::getOpenFileName(this, "Select file to download...", ".", "Image files (*.hex)");
+	filename = QFileDialog::getOpenFileName(this, "Select file to download...", ".", "Image files (*.hex *.ihx)");
 	mainwin->lab3_selfile->setText(filename);
 	if ( filename != "" ) {
 		mainwin->pb3_dl->setEnabled(true);
