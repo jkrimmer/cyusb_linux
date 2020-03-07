@@ -34,6 +34,7 @@ Installation Steps:
     in the system directories (/usr/local/lib and /usr/local/bin).
     It also sets up a set of UDEV rules in /etc/udev/rules.d 
     and updates the environment variables under the /etc/profile.d directory.
+    It installs the global config file '/etc/cyusb.conf' (origin is directory 'configs').
     For a clean uninstall call 'make uninstall', this command removes the library,
     the application program and the configurations from the system directories.
     
@@ -48,3 +49,7 @@ Installation Steps:
 
  5. The GUI application can now be launched using the 'cyusb' command. 
     You should call it always from a command line to make use of the status messages.
+
+ 6. Programs using the library libcyusb require a valid config file, this is either
+    the global one '/etc/cyusb.conf' or an individual file for each user,
+    '~/.config/cyusb/cyusb.conf', which takes precedence over the global config.

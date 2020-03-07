@@ -74,21 +74,20 @@ isempty (
 	return flag;
 }
 
+
 /* parse_configfile:
-   Parse the /etc/cyusb.conf file and get the list of USB devices of interest.
+   Parse the cyusb.conf file and get the list of USB devices of interest.
  */
 static void
-parse_configfile (
-		void)
-{
-	FILE *inp;
+parse_configfile( const char* cyusb_conf ) {
+	FILE *inp = nullptr;
 	char buf[MAX_CFG_LINE_LENGTH];
 	char *cp1, *cp2, *cp3;
 	int i;
 
-	inp = fopen("/etc/cyusb.conf", "r");
-	if (inp == NULL)
-		return;
+	inp = fopen( cyusb_conf, "r" );
+	if ( inp == nullptr ) // if not found...
+		return; // ...give up
 
 	memset(buf,'\0',MAX_CFG_LINE_LENGTH);
 	while ( fgets(buf,MAX_CFG_LINE_LENGTH,inp) ) {
@@ -122,7 +121,9 @@ parse_configfile (
 				if ( !strcmp(cp1,"</VPD>") )
 					break;
 				cp2 = strtok(NULL, " \t");
-				cp3 = strtok(NULL, " \t\n");
+				cp3 = strtok(NULL, "\n");
+                                while ( *cp3 == ' ' || *cp3 == '\t' ) // strip leading whitespace
+                                    ++cp3;
 
 				vpd[maxdevices].vid = strtol(cp1,NULL,16);
 				vpd[maxdevices].pid = strtol(cp2,NULL,16);
@@ -133,7 +134,7 @@ parse_configfile (
 			}
 		}
 		else {
-			printf("Error in config file /etc/cyusb.conf: %s \n",buf);
+			printf( "Error in config file %s: %s \n", cyusb_conf, buf );
 			exit(1);
 		}
 	}
@@ -158,7 +159,7 @@ device_is_of_interest (
 
 	for ( i = 0; i < maxdevices; ++i ) {
 		if ( (vpd[i].vid == vid) && (vpd[i].pid == pid) ) {
-			printf("Found device %04x %04x \n", vid, pid);
+			printf("Found device %04x %04x (%s)\n", vid, pid, vpd[i].desc);
 			return 1;
 		}
 	}
@@ -227,20 +228,26 @@ renumerate (
 /* cyusb_open:
    Opens handles to all USB devices of interest, and returns their count.
  */
-int cyusb_open (
-		void)
-{
-	int fd1;
+int cyusb_open( void ) {
+	int fd1 = -1;
 	int r;
-
-	fd1 = open("/etc/cyusb.conf", O_RDONLY);
-	if ( fd1 < 0 ) {
-		printf("/etc/cyusb.conf file not found. Exiting\n");
-		return -ENOENT;
+	char global_config_path[] = "/etc/cyusb.conf";
+	char user_config_path[ MAX_FILEPATH_LENGTH ] = "";
+	char *path = getenv( "HOME" );
+	if ( path ) {
+	    sprintf( user_config_path, "%s/%s", path, ".config/cyusb/cyusb.conf" );
+	    path = user_config_path;
+	    fd1 = open( path, O_RDONLY ); // try user config
+	}
+	if ( fd1 < 0 ) // if not found...
+	    fd1 = open( path = global_config_path, O_RDONLY ); // ...try global config
+	if ( fd1 < 0 ) { // if also not found...
+	    printf( "Config file %s not found. Exiting\n", path );
+	    return -ENOENT; // give up
 	}
 	else {
 		close(fd1);
-		parse_configfile();	/* Parse the file and store information inside exported data structures */
+		parse_configfile( path );	/* Parse the file and store information inside exported data structures */
 	}
 
 	r = libusb_init(NULL);
