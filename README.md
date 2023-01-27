@@ -5,6 +5,7 @@
                    ====================================
 
 Pre-requisites:
+---------------
 
  1. libusb-1.0.x is required for compilation and functioning of the API library.
 
@@ -21,6 +22,7 @@ Pre-requisites:
 
 
 Installation Steps:
+-------------------
 
  1. cd to the main directory where the files were extracted. 
     
@@ -53,3 +55,9 @@ Installation Steps:
  6. Programs using the library libcyusb require a valid config file, this is either
     the global one '/etc/cyusb.conf' or an individual file for each user,
     '~/.config/cyusb/cyusb.conf', which takes precedence over the global config.
+
+EEPROM:
+-------
+
+If you only want to store an application file on the *large* EEPROM of the FX2, you can also use
+the CLI tool [fx2eeprom](https://github.com/Ho-Ro/fx2eeprom) that requires less preparation effort.

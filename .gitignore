@@ -101,3 +101,16 @@ doc-pak
 *.orig
 *.new
 *.diff
+
+src/00_fwload
+src/01_getdesc
+src/03_getconfig
+src/04_kerneldriver
+src/05_claiminterface
+src/06_setalternate
+src/08_cybulk
+src/09_cyusb_performance
+src/config_parser
+src/cyusbd
+src/download_fx2
+src/download_fx3

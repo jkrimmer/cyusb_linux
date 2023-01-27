@@ -50,5 +50,8 @@ uninstall:
 
 .PHONY: deb
 deb: all
-	fakeroot checkinstall --pkgname cyusb --pkgversion 1.0.5 --default --install=no --backup=no --deldoc=yes
+	fakeroot checkinstall --pkgname cyusb --pkgversion 1.0.5 --pkggroup electronics --default --install=no --backup=no --deldoc=yes
 
+.PHONY: CHANGELOG
+CHANGELOG:
+	git log --pretty='format:%as: %s [%h]' > CHANGELOG
