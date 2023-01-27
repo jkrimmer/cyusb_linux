@@ -289,11 +289,13 @@ fx2_dnld_print_usage (
 	printf ("%s: FX2LP firmware programmer\n", arg0);
 	printf ("Usage:\n");
 	printf ("\t%s -h: Print usage information\n\n", arg0);
-	printf ("\t%s -i <filename> -t <target>: Program firmware from <filename> to <target>,\n", arg0);
+	printf ("\t%s -i <filename> -t <target> [-v <VID> -p <PID>]:\n", arg0);
+	printf ("\tProgram firmware from <filename> to <target> of device with <VID> <PID>\n");
 	printf ("\t\twhere <target> is one of:\n");
 	printf ("\t\t\t\"RAM \": Program to internal or external RAM\n");
 	printf ("\t\t\t\"SI2C\": Program to small I2C EEPROM, IIC file to be provided\n");
 	printf ("\t\t\t\"LI2C\": Program to large I2C EEPROM, IIC file to be provided\n");
+	printf ("\t\tVID and PID are optional, pick devices from '/etc/cyusb.conf' as default\n");
 	printf ("\n");
 }
 
@@ -724,41 +726,47 @@ int main (
 	unsigned short address = 0;
 	unsigned char *dbuf = NULL;
 	int i;
+        unsigned short vid = 0;
+        unsigned short pid = 0;
 
 	/* Parse command line arguments. */
 	for (i = 1; i < argc; i++) {
 		if ((strcasecmp (argv[i], "-h") == 0) || (strcasecmp (argv[i], "--help") == 0)) {
 			fx2_dnld_print_usage (argv[0]);
 			return 0;
-		} else {
-			if ((strcasecmp (argv[i], "-t") == 0) || (strcasecmp (argv[i], "--target") == 0)) {
-				if (argc > (i + 1)) {
-					tgt_str = argv[i + 1];
-					if (strcasecmp (argv[i + 1], "ram") == 0)
-						tgt = FW_TARGET_RAM;
-					if (strcasecmp (argv[i + 1], "si2c") == 0)
-						tgt = FW_TARGET_SM_I2C;
-					if (strcasecmp (argv[i + 1], "li2c") == 0)
-						tgt = FW_TARGET_LR_I2C;
-					if (tgt == FW_TARGET_NONE) {
-						fprintf (stderr, "Error: Unknown target %s\n", argv[i + 1]);
-						fx2_dnld_print_usage (argv[0]);
-						return -EINVAL;
-					}
-				}
-				i++;
-			} else {
-				if ((strcmp (argv[i], "-i") == 0) || (strcmp (argv[i], "--image") == 0)) {
-					if (argc > (i + 1))
-						filename = argv[i + 1];
-					i++;
-				} else {
-					fprintf (stderr, "Error: Unknown parameter %s\n", argv[i]);
-					fx2_dnld_print_usage (argv[0]);
-					return -EINVAL;
-				}
-			}
-		}
+		} else if ((strcasecmp (argv[i], "-t") == 0) || (strcasecmp (argv[i], "--target") == 0)) {
+                        if (argc > (i + 1)) {
+                                tgt_str = argv[i + 1];
+                                if (strcasecmp (argv[i + 1], "ram") == 0)
+                                        tgt = FW_TARGET_RAM;
+                                if (strcasecmp (argv[i + 1], "si2c") == 0)
+                                        tgt = FW_TARGET_SM_I2C;
+                                if (strcasecmp (argv[i + 1], "li2c") == 0)
+                                        tgt = FW_TARGET_LR_I2C;
+                                if (tgt == FW_TARGET_NONE) {
+                                        fprintf (stderr, "Error: Unknown target %s\n", argv[i + 1]);
+                                        fx2_dnld_print_usage (argv[0]);
+                                        return -EINVAL;
+                                }
+                        }
+                        i++;
+                } else if ((strcmp (argv[i], "-i") == 0) || (strcmp (argv[i], "--image") == 0)) {
+                        if (argc > (i + 1))
+                                filename = argv[i + 1];
+                        i++;
+                } else if ((strcmp (argv[i], "-v") == 0) || (strcmp (argv[i], "--vid") == 0)) {
+                        if (argc > (i + 1))
+                                vid = strtoul( argv[i + 1], NULL, 16 );
+                        i++;
+                } else if ((strcmp (argv[i], "-p") == 0) || (strcmp (argv[i], "--pid") == 0)) {
+                        if (argc > (i + 1))
+                                pid = strtoul( argv[i + 1], NULL, 16 );
+                        i++;
+                } else {
+                        fprintf (stderr, "Error: Unknown parameter %s\n", argv[i]);
+                        fx2_dnld_print_usage (argv[0]);
+                        return -EINVAL;
+                }
 	}
 	if ((filename == NULL) || (tgt == FW_TARGET_NONE)) {
 		fprintf (stderr, "Error: Firmware binary or target not specified\n");
@@ -766,7 +774,16 @@ int main (
 		return -EINVAL;
 	}
 
-	r = cyusb_open ();
+	if ((vid && !pid) || (!vid && pid)) {
+		fprintf (stderr, "Must provide BOTH VID and PID or leave BOTH blank to pick up from /etc/cyusb.conf\n");
+		fx2_dnld_print_usage (argv[0]);
+		return -EINVAL;
+	}
+
+	if ( vid && pid )
+                r = cyusb_open (vid, pid);
+        else
+		r = cyusb_open ();
 	if (r < 0) {
 	     fprintf (stderr, "Error opening library\n");
 	     return -ENODEV;

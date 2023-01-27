@@ -99,7 +99,7 @@ static void * writer(void *arg2)
 			return NULL;
 		}
 	} 
-
+	return NULL;
 }
 
 

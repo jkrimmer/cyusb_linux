@@ -114,3 +114,4 @@ src/config_parser
 src/cyusbd
 src/download_fx2
 src/download_fx3
+src/*.iic
