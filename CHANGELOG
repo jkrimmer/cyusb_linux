@@ -1,3 +1,4 @@
+2023-01-27: download_fx2: add option for VID and PID; 08_cybulk: silence warning [845bc22]
 2023-01-27: documentation update [befc5f4]
 2020-03-07: cystream from github.com/shenki/cystream that works on LCsoft board [9cb195a]
 2020-03-07: provide an 'user config file' option [0113e88]

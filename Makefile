@@ -8,21 +8,26 @@ help:
 	@echo	'make deb	build a debian package'
 
 .PHONY: all
-all: lib gui
+all: lib gui cli
 
 .PHONY: lib
 lib:
-	cd lib && make
+	$(MAKE) -C lib
 
 .PHONY: gui
 gui:
 	cd gui_src && qmake && make
 
+.PHONY: cli
+cli:
+	$(MAKE) -C src
+
 .PHONY: clean
 clean:
 	rm -f lib/libcyusb.so lib/libcyusb.so.1
 	rm -f bin/cyusb
-	cd gui_src && make clean
+	$(MAKE) -C gui_src clean
+	$(MAKE) -C src clean
 
 .PHONY: install
 install:
@@ -32,6 +37,7 @@ install:
 	cd /usr/local/lib; ln -sf libcyusb.so.1 libcyusb.so
 	install configs/cy_renumerate.sh /usr/local/bin
 	install bin/cyusb /usr/local/bin/
+	install src/download_fx2 /usr/local/bin
 	install -m644 configs/cyusb.conf /etc/
 	install -m644 configs/88-cyusb.rules /etc/udev/rules.d/
 	echo "# Cypress USB Suite: Root directory" > /etc/profile.d/cyusb
@@ -44,6 +50,7 @@ uninstall:
 	-rm -f /etc/udev/rules.d/88-cyusb.rules
 	-rm -f /usr/lib/libcyusb.so* /usr/local/lib/libcyusb.so*
 	-rm -f /usr/local/bin/cyusb
+	-rm -f /usr/local/bin/download_fx2
 	-rm -f /usr/local/bin/cy_renumerate.sh
 	-rm -f /etc/profile.d/cyusb
 
