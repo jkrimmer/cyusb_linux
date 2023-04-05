@@ -1,7 +1,7 @@
 
                     Cypress Semiconductor Corporation
                    CyUSB Suite For Linux, version 1.0.5
-                       Updated by Ho-Ro to use Qt5
+                       Updated by jkrimmer to use Qt6
                    ====================================
 
 Pre-requisites:
@@ -12,7 +12,7 @@ Pre-requisites:
  2. Native gcc/g++ tool-chain and the GNU make utility are required for
     compiling the library and application.
 
- 3. Qt5 development packages are required for building the cyusb GUI application.
+ 3. Qt6 development packages are required for building the cyusb GUI application.
 
  4. If you want to build a Debian package you need also the packages
     'checkinstall' and 'fakeroot'.
