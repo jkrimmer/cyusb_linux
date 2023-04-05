@@ -37,7 +37,7 @@ int num_devices_detected;
 int current_device_index = -1;
 
 static QLocalServer server(0);
-static QTime *isoc_time;
+static QElapsedTimer *isoc_time;
 
 
 extern int sigusr1_fd[2];
@@ -1150,8 +1150,8 @@ void ControlCenter::on_le3_out_hex_textEdited()
 	char tbuf[5];
 	unsigned int sz;
 
-	QRegExp rx("[0-9A-Fa-f]*");
-	QValidator *validator = new QRegExpValidator(rx, this);
+	QRegularExpression rx("[0-9A-Fa-f]*");
+	QValidator *validator = new QRegularExpressionValidator(rx, this);
 	mainwin->le3_out_hex->setValidator(validator);
 
 	QByteArray t = mainwin->le3_out_hex->text().toLatin1();
@@ -1285,8 +1285,8 @@ void ControlCenter::on_le6_out_hex_textEdited()
 	char tbuf[5];
 	unsigned int sz;
 
-	QRegExp rx("[0-9A-Fa-f]*");
-	QValidator *validator = new QRegExpValidator(rx, this);
+	QRegularExpression rx("[0-9A-Fa-f]*");
+	QValidator *validator = new QRegularExpressionValidator(rx, this);
 	mainwin->le6_out_hex->setValidator(validator);
 
 	QByteArray t = mainwin->le6_out_hex->text().toLatin1();
@@ -2001,7 +2001,7 @@ void ControlCenter::on_pb7_rcv_clicked()
 	libusb_set_iso_packet_lengths(transfer, pktsize_in);
 	transfer->flags = LIBUSB_TRANSFER_FREE_BUFFER | LIBUSB_TRANSFER_FREE_TRANSFER;
 
-	isoc_time = new QTime();
+	isoc_time = new QElapsedTimer();
 	isoc_time->start();
 
 	r = libusb_submit_transfer(transfer);
@@ -2062,7 +2062,7 @@ void ControlCenter::on_pb7_send_clicked()
 	libusb_set_iso_packet_lengths(transfer, pktsize_out);
 	transfer->flags = LIBUSB_TRANSFER_FREE_BUFFER | LIBUSB_TRANSFER_FREE_TRANSFER;
 
-	isoc_time = new QTime();
+	isoc_time = new QElapsedTimer();
 	isoc_time->start();
 
 	r = libusb_submit_transfer(transfer);
